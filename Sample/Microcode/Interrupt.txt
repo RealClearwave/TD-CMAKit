@@ -1,0 +1,148 @@
+.START!:
+    AR=PC++
+    IR=MEM
+    <P1:30>
+        0:ADD
+        1:AND
+        2:IN
+        3:OUT
+        4:MOV
+        5:SSP
+        6:LDI
+        7:STI
+        8:CLI
+        9:OR
+        A:RR
+        B:IRET
+        C:Direct
+        D:Indirect
+        E:Index
+        F:Offset
+
+.ADD#:
+    A=RD
+    B=RS
+    RD=A+B
+    END
+
+.AND#:
+    A=RD
+    B=RS
+    RD=A&B
+    END
+
+.IN#:
+    AR=PC++
+    AR=MEM
+    RD=IN
+    END
+
+.OUT#:
+    AR=PC++
+    AR=MEM
+    OUT=RS
+    END
+
+.MOV#:
+    RD=RS
+    END
+
+.LDI#:
+    AR=PC++
+    RD=MEM
+    END
+
+.SSP#:
+    AR=PC++
+    SP=MEM
+    END
+
+.STI#:
+    CLI
+    END
+
+.CLI#:
+    STI
+    END
+
+.OR#:
+    A=RD
+    B=RS
+    RD=A|B
+    END
+
+.RR#:
+    A=RD
+    B=RS
+    RD=A<<<B
+    END
+
+.IRET#:
+    A=SP
+    SP=A-1
+    AR=SP
+    PC=MEM
+    END
+
+.Direct:
+    AR=PC++
+    A=MEM
+    AR=MEM
+    GOTO P2Branch
+
+.Indirect:
+    AR=PC++
+    AR=MEM
+    A=MEM
+    AR=MEM
+    GOTO P2Branch
+
+.Index:
+    AR=PC++
+    A=MEM
+    B=RI
+    AR=MEM
+    A=A+B
+    GOTO P2Branch
+
+.Offset:
+    AR=PC++
+    A=MEM
+    B=PC
+    AR=A+B
+    A=A+B
+    GOTO P2Branch
+
+.P2Branch:
+    NOP
+    <P2:0C>
+        0:LAD
+        1:STA
+        2:JMP
+        3:BZC
+
+.LAD#:
+    RD=MEM
+    END
+
+.STA#:
+    MEM=RD
+    END
+
+.JMP#:
+    PC=A
+    END
+
+.BZC#:
+    NOP
+    <P3:0B>
+        N:BZCN
+        Y:BZCY
+
+.BZCN:
+    NOP
+    END
+
+.BZCY:
+    PC=A
+    END
